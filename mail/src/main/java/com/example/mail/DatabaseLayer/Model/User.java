@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /*User entity for database*/
@@ -20,25 +18,54 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @NotEmpty
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String username;
 
-    @NotNull
-    @NotEmpty
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String email;
 
-    @NotNull
-    @NotEmpty
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime createdOn;
 
-    public User(String username, String email) {
+    User() {
+        this.createdOn = LocalDateTime.now();
+    }
+
+    User(String username, String email) {
         this.username = username;
         this.email = email;
         this.createdOn = LocalDateTime.now();
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public LocalDateTime getCreatedOn() {
+        return this.createdOn;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setCreatedOn(LocalDateTime createdOn) {
+        this.createdOn = createdOn;
+    }
 }
