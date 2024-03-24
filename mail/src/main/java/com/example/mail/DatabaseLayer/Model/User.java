@@ -6,6 +6,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 /*User entity for database*/
@@ -15,16 +18,17 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(nullable = false)
     private Long id;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String username;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDateTime createdOn;
 
     User() {
