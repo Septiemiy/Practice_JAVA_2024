@@ -4,13 +4,13 @@
 
 ## Run the server:
 
-For run the server **cd** to *~\Practice_JAVA_2024\mail* and write: **./mvnw clean spring-boot:run**
+For run the server **cd** to "*~\Practice_JAVA_2024\mail*" and write: **./mvnw clean spring-boot:run**
 
 ## Command:
 
 <span style="color:red">Command work only in <b>cmd</b> and don't work in <b>powershell</b></span>
 
-**If you have** *Python* **you can write** *| python -m json.tool* **at the end of each command to prettify json output in** *cmd* 
+**If you have** *Python* **you can write"** *| python -m json.tool* **"at the end of each command to prettify json output in** *cmd* 
 
 ### User:
 
