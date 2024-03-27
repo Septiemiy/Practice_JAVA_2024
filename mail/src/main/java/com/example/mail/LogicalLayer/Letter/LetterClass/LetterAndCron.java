@@ -14,4 +14,12 @@ public class LetterAndCron {
     public Cron getCron() {
         return cron;
     }
+
+    public void setLetter(Letter letter) {
+        this.letter = letter;
+    }
+
+    public void setCron(Cron cron) {
+        this.cron = cron;
+    }
 }

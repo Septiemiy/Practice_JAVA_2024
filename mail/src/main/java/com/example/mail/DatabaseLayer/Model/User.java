@@ -1,18 +1,24 @@
 package com.example.mail.DatabaseLayer.Model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /*User entity for database*/
 
 @Entity
-@Table(name = "UserMail")
+@Table(name = "User_Mail")
 public class User {
 
     @Id
@@ -28,6 +34,9 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Log> logs = new HashSet<>();
 
     User() {
         this.createdOn = LocalDateTime.now();
@@ -55,6 +64,10 @@ public class User {
         return this.createdOn;
     }
 
+    public Set<Log> getLogs() {
+        return this.logs;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -69,5 +82,9 @@ public class User {
 
     public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
+    }
+
+    public void setLogs(Set<Log> logs) {
+        this.logs = logs;
     }
 }

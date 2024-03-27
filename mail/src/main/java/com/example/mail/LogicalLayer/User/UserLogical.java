@@ -36,4 +36,10 @@ public class UserLogical {
         Pageable pageable = PageRequest.of(pageNumber, 3, Sort.by("createdOn").descending());
         return pageable;
     }
+
+    public static Pageable getPageableForStatistics(int pageNumber) {
+
+        Pageable pageable = PageRequest.of(pageNumber, 3);
+        return pageable;
+    }
 }

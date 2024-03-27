@@ -15,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.mail.DatabaseLayer.Interfaces.CronRepository;
+import com.example.mail.DatabaseLayer.Interfaces.LogRepository;
 import com.example.mail.DatabaseLayer.Interfaces.UserRepository;
 import com.example.mail.DatabaseLayer.Model.Cron;
-import com.example.mail.DatabaseLayer.Model.User;
 import com.example.mail.LogicalLayer.Letter.LetterLogical;
-import com.example.mail.LogicalLayer.Letter.LetterClass.Letter;
 import com.example.mail.LogicalLayer.Letter.LetterClass.LetterAndCron;
 import com.example.mail.LogicalLayer.Letter.LetterException.CronNotFoundException;
 import com.example.mail.LogicalLayer.Letter.LetterException.LetterIsValidCronException;
@@ -33,11 +32,13 @@ public class CronController {
 
     private final UserRepository userRepository;
     private final CronRepository cronRepository;
+    private final LogRepository logRepository;
 
-    CronController(UserRepository userRepository, CronRepository cronRepository)
+    CronController(UserRepository userRepository, CronRepository cronRepository, LogRepository logRepository)
     {
         this.userRepository = userRepository;
         this.cronRepository = cronRepository;
+        this.logRepository = logRepository;
     }
 
     @PostMapping("/create_cron/{sender_email}/{schedule_name}")
@@ -51,7 +52,7 @@ public class CronController {
 
             if(CronExpression.isValidExpression(letterAndCron.getCron().getExpression()))
             {
-                LetterLogical.callUserRepository(userRepository);
+                LetterLogical.callUserLogRepository(userRepository, logRepository);
                 LetterLogical.cronScheduleTask(letterAndCron, sender_email, schedule_name);
                 return ResponseEntity.ok(cronRepository.save(letterAndCron.getCron()));
             }

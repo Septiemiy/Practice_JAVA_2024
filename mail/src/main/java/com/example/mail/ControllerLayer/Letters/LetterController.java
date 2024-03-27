@@ -17,20 +17,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.mail.DatabaseLayer.Interfaces.LogRepository;
 import com.example.mail.DatabaseLayer.Interfaces.UserRepository;
 import com.example.mail.DatabaseLayer.Model.User;
 import com.example.mail.LogicalLayer.Letter.LetterLogical;
 import com.example.mail.LogicalLayer.Letter.LetterClass.Letter;
+import com.example.mail.LogicalLayer.Log.LogService;
 import com.example.mail.LogicalLayer.User.UserException.UserNotFoundException;
+import com.example.mail.LogicalLayer.User.UserException.UserWithThisEmailAlreadyExistException;
 
 @RestController
 public class LetterController {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final LogRepository logRepository;
 
-    LetterController(UserRepository repository)
+    LetterController(UserRepository userRepository, LogRepository logRepository)
     {
-        this.repository = repository;
+        this.userRepository = userRepository;
+        this.logRepository = logRepository;
     }
 
     @PostMapping("/send_email/{sender_email}/{user_to_send_id}")
@@ -38,7 +43,12 @@ public class LetterController {
 
         try
         {
-            Optional<User> userToSend = repository.findById(user_to_send_id);
+            if(userRepository.findByEmail(sender_email) == null) {
+                throw new IllegalArgumentException( new UserNotFoundException());
+            }
+
+            Optional<User> userToSend = userRepository.findById(user_to_send_id);
+
             if(userToSend.isPresent())
             {
                 Message message = new MimeMessage(LetterLogical.getSession());
@@ -51,6 +61,8 @@ public class LetterController {
                     letter.getBody() + "\n\t" +
                         "User name: " + userToSend.get().getUsername() + "\n\t" +
                         "Creation date and time: " + userToSend.get().getCreatedOn());
+                
+                LogService.log(userRepository, logRepository, "REST", sender_email);
                 
                 Transport.send(message);
                 
@@ -66,6 +78,10 @@ public class LetterController {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
         catch(MessagingException exception)
+        {
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch(IllegalArgumentException exception)
         {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
