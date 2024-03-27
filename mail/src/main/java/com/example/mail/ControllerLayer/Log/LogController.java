@@ -44,7 +44,9 @@ public class LogController {
         Collections.sort(userStatistics, new Comparator<UserStatistics>() {
             @Override
             public int compare(UserStatistics statistics1, UserStatistics statistics2) {
-                return statistics2.getCount().getRest() - statistics1.getCount().getRest();
+                int totalCountU1 = statistics1.getCount().getRest() + statistics1.getCount().getCron();
+                int totalCountU2 = statistics2.getCount().getRest() + statistics2.getCount().getCron();
+                return totalCountU2 - totalCountU1;
             }
         });
 

@@ -88,8 +88,12 @@ public class CronController {
             }
             else
             {
-                return ResponseEntity.badRequest().body( new ScheduleDontUpdatedException() ); 
+                throw new ScheduleDontUpdatedException(); 
             }
+        }
+        catch(ScheduleDontUpdatedException exception)
+        {
+            return ResponseEntity.badRequest().body( new ScheduleDontUpdatedException() );
         }
         catch(Exception exception)
         {
