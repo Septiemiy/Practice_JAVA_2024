@@ -33,32 +33,32 @@ public class LetterController {
         this.repository = repository;
     }
 
-    @PostMapping("/send_email/{user_id}")
-    ResponseEntity<Object> sendEmail(@RequestBody Letter letter, @PathVariable Long user_id) {
+    @PostMapping("/send_email/{sender_email}/{user_to_send_id}")
+    ResponseEntity<Object> sendEmail(@RequestBody Letter letter, @PathVariable String sender_email, @PathVariable Long user_to_send_id) {
 
         try
         {
-            Optional<User> user = repository.findById(user_id);
-            if(user.isPresent())
+            Optional<User> userToSend = repository.findById(user_to_send_id);
+            if(userToSend.isPresent())
             {
                 Message message = new MimeMessage(LetterLogical.getSession());
                 message.setFrom(new InternetAddress(LetterLogical.mainEmail));
                 message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(user.get().getEmail()));
+                    InternetAddress.parse(userToSend.get().getEmail()));
                 message.setSubject("Subject: " + letter.getSubject());
-                message.setText("To: " + user.get().getEmail());
+                message.setText("To: " + userToSend.get().getEmail());
                 message.setText("Body: \n" +
                     letter.getBody() + "\n\t" +
-                        "User name: " + user.get().getUsername() + "\n\t" +
-                        "Creation date and time: " + user.get().getCreatedOn());
+                        "User name: " + userToSend.get().getUsername() + "\n\t" +
+                        "Creation date and time: " + userToSend.get().getCreatedOn());
                 
                 Transport.send(message);
                 
-                return ResponseEntity.ok("\"success\": \"email has been sent to " + user.get().getEmail() + "\"");
+                return ResponseEntity.ok("\"success\": \"email has been sent to " + userToSend.get().getEmail() + "\"");
             }
             else
             {
-                throw new NoSuchElementException( new UserNotFoundException(user_id));
+                throw new NoSuchElementException( new UserNotFoundException(user_to_send_id));
             }
         }
         catch(NoSuchElementException exception)

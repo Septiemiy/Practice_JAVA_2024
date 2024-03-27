@@ -83,8 +83,8 @@ public class UserController {
                 user.setUsername(newUser.getUsername());
                 user.setEmail(newUser.getEmail());
                 return repository.save(user);
-      })
-      .orElseThrow(() -> new UserNotFoundException(id)));
+        })
+        .orElseThrow(() -> new UserNotFoundException(id)));
     }
 
     @PutMapping("/update_user/username/{id}")
